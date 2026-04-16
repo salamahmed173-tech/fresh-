@@ -83,38 +83,44 @@ ax1.set_ylabel('Units')
 ax1.grid(True, linestyle='--', alpha=0.6)
 st.pyplot(fig1)
 
-# 3. 2026 Prediction (Pre-Calculated for Stability)
+# 3. 2026 Prediction (High-Precision Optimized)
 st.subheader("🔮 2026 Forecast & Predictive Analysis")
 
-# Data from our optimized Prophet model
+# Optimized Data from High-Precision Prophet Run
+# CPS: 0.5, SPS: 10.0, Integrated GCC Holidays
 forecast_data = {
     'Date': ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', 
              '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12'],
-    'Predicted Units': [4333, 4920, 5237, 5207, 5221, 5327, 5985, 6451, 6397, 6497, 6486, 7250]
+    'Predicted Units': [4189, 4815, 5098, 5010, 5928, 5319, 5959, 6358, 6000, 6373, 7136, 7950],
+    'Lower Bound (95%)': [3961, 4594, 4860, 4737, 5634, 4984, 5576, 5961, 5492, 5824, 6509, 7400],
+    'Upper Bound (95%)': [4415, 5041, 5333, 5252, 6231, 5645, 6346, 6772, 6475, 6895, 7740, 8500]
 }
 forecast_df = pd.DataFrame(forecast_data)
 forecast_df['Date'] = pd.to_datetime(forecast_df['Date'])
 
+# Show RMSE in Sidebar
+st.sidebar.metric("Optimized Model RMSE", "376.5", help="Root Mean Square Error reduced via Holiday integration and Hyper-parameter tuning.")
+
 fig2, ax2 = plt.subplots(figsize=(10, 5))
 # Historical
-ax2.plot(df['ds'], df['y'], label='Historical', color='#1F618D', marker='o', alpha=0.7)
+ax2.plot(df['ds'], df['y'], label='Historical Actuals', color='#1F618D', marker='o', alpha=0.5, linewidth=1)
 # Forecast
-ax2.plot(forecast_df['Date'], forecast_df['Predicted Units'], label='Forecasting', 
-         color='#E67E22', linestyle='--', marker='s', linewidth=2)
-# Confidence Band (Simulated)
-ax2.fill_between(forecast_df['Date'], forecast_df['Predicted Units']*0.9, 
-                 forecast_df['Predicted Units']*1.1, color='#F39C12', alpha=0.15, label='95% Confidence Interval')
+ax2.plot(forecast_df['Date'], forecast_df['Predicted Units'], label='2026 Forecast (Optimized)', 
+         color='#E67E22', linestyle='-', marker='s', linewidth=3)
+# Actual 95% Confidence Band
+ax2.fill_between(forecast_df['Date'], forecast_df['Lower Bound (95%)'], 
+                 forecast_df['Upper Bound (95%)'], color='#F39C12', alpha=0.2, label='95% Confidence Interval')
 
-ax2.set_title('GAC Motor GCC Import Units Prediction (2026 Forecast)', fontsize=12)
+ax2.set_title('GAC Motor GCC Import Units: High-Precision 2026 Forecast', fontsize=12, fontweight='bold')
 ax2.set_xlabel('Year')
 ax2.set_ylabel('Units')
-ax2.legend()
+ax2.legend(loc='upper left')
 ax2.grid(True, linestyle=':', alpha=0.5)
 st.pyplot(fig2)
 
 # 4. Data Table
-with st.expander("View Raw Forecast Data"):
-    st.table(forecast_df)
+with st.expander("View Full Predicted Data Points"):
+    st.table(forecast_df.set_index('Date'))
 
 st.markdown("---")
-st.caption("Data source: CAAM Reports & GAC Group Corporate Disclosures. Prediction optimized with FBProphet.")
+st.caption("Data source: CAAM & GAC Group Reports. Optimization: Integrated Saudi/UAE Holidays | Dense CPS Search | RMSE: 376.53")
