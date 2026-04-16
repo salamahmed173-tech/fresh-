@@ -83,23 +83,27 @@ ax1.set_ylabel('Units')
 ax1.grid(True, linestyle='--', alpha=0.6)
 st.pyplot(fig1)
 
-# 3. Prophet Model Training
-with st.spinner('Optimizing Predictor Model (RMSE Reduction)...'):
-    train = df.iloc[:-12]
-    test = df.iloc[-12:]
-    
-    # Pre-selected best params from earlier optimization
+# 3. Prophet Model Training (Cached for Performance)
+@st.cache_data
+def get_forecast_data(_df):
     best_params = {'cps': 0.5, 'sps': 0.1}
-    
-    model = Prophet(
+    m = Prophet(
         changepoint_prior_scale=best_params['cps'],
         seasonality_prior_scale=best_params['sps'],
         yearly_seasonality=True
     )
-    model.fit(df)
-    
-    future = model.make_future_dataframe(periods=12, freq='ME')
-    forecast = model.predict(future)
+    m.fit(_df)
+    future_df = m.make_future_dataframe(periods=12, freq='ME')
+    fcst = m.predict(future_df)
+    return fcst
+
+with st.spinner('Calculating 2026 Forecast...'):
+    try:
+        forecast = get_forecast_data(df)
+        st.success("✅ Model analysis complete!")
+    except Exception as e:
+        st.error(f"Error in forecasting: {e}")
+        st.stop()
 
 # 4. Forecast Visualization
 st.subheader("🔮 2026 Forecast & Predictive Analysis")
