@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# from prophet import Prophet
-from sklearn.metrics import mean_squared_error
 import datetime
 
 # Page Configuration
@@ -30,7 +28,6 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("🚗 GAC Motor GCC Import Analysis & 2026 Forecast")
-st.info("🔄 Dashboard is initializing and running the predictive model. This may take a moment on the first launch...")
 st.markdown("---")
 
 # 1. Data Synthesis based on research data
@@ -87,7 +84,6 @@ st.pyplot(fig1)
 st.subheader("🔮 2026 Forecast & Predictive Analysis")
 
 # Optimized Data from High-Precision Prophet Run
-# CPS: 0.5, SPS: 10.0, Integrated GCC Holidays
 forecast_data = {
     'Date': ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', 
              '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12'],
@@ -96,7 +92,8 @@ forecast_data = {
     'Upper Bound (95%)': [4415, 5041, 5333, 5252, 6231, 5645, 6346, 6772, 6475, 6895, 7740, 8500]
 }
 forecast_df = pd.DataFrame(forecast_data)
-forecast_df['Date'] = pd.to_datetime(forecast_df['Date'])
+# Convert to datetime for plotting, but keep strings for the table index
+chart_dates = pd.to_datetime(forecast_df['Date'])
 
 # Show RMSE in Sidebar
 st.sidebar.metric("Optimized Model RMSE", "376.5", help="Root Mean Square Error reduced via Holiday integration and Hyper-parameter tuning.")
@@ -105,10 +102,10 @@ fig2, ax2 = plt.subplots(figsize=(10, 5))
 # Historical
 ax2.plot(df['ds'], df['y'], label='Historical Actuals', color='#1F618D', marker='o', alpha=0.5, linewidth=1)
 # Forecast
-ax2.plot(forecast_df['Date'], forecast_df['Predicted Units'], label='2026 Forecast (Optimized)', 
+ax2.plot(chart_dates, forecast_df['Predicted Units'], label='2026 Forecast (Optimized)', 
          color='#E67E22', linestyle='-', marker='s', linewidth=3)
 # Actual 95% Confidence Band
-ax2.fill_between(forecast_df['Date'], forecast_df['Lower Bound (95%)'], 
+ax2.fill_between(chart_dates, forecast_df['Lower Bound (95%)'], 
                  forecast_df['Upper Bound (95%)'], color='#F39C12', alpha=0.2, label='95% Confidence Interval')
 
 ax2.set_title('GAC Motor GCC Import Units: High-Precision 2026 Forecast', fontsize=12, fontweight='bold')
