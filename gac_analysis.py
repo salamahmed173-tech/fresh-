@@ -86,43 +86,32 @@ ax1.set_ylabel('Units')
 ax1.grid(True, linestyle='--', alpha=0.6)
 st.pyplot(fig1)
 
-# 3. Prophet Model Training (Cached for Performance)
-@st.cache_data
-def get_forecast_data(_df):
-    best_params = {'cps': 0.5, 'sps': 0.1}
-    m = Prophet(
-        changepoint_prior_scale=best_params['cps'],
-        seasonality_prior_scale=best_params['sps'],
-        yearly_seasonality=True
-    )
-    m.fit(_df)
-    future_df = m.make_future_dataframe(periods=12, freq='ME')
-    fcst = m.predict(future_df)
-    return fcst
+# 3. Prophet Model Training (Disabled for Debugging)
+st.warning("⚠️ Predictive model training is temporarily disabled to troubleshoot loading. Results below are historical.")
 
-with st.spinner('Calculating 2026 Forecast...'):
-    try:
-        forecast = get_forecast_data(df)
-        st.success("✅ Model analysis complete!")
-    except Exception as e:
-        st.error(f"Error in forecasting: {e}")
-        st.stop()
+# with st.spinner('Calculating 2026 Forecast...'):
+#     try:
+#         forecast = get_forecast_data(df)
+#         st.success("✅ Model analysis complete!")
+#     except Exception as e:
+#         st.error(f"Error in forecasting: {e}")
+#         st.stop()
 
-# 4. Forecast Visualization
-st.subheader("🔮 2026 Forecast & Predictive Analysis")
-fig2, ax2 = plt.subplots(figsize=(10, 5))
-# Historical
-ax2.plot(df['ds'], df['y'], label='Historical', color='#1F618D', marker='o', alpha=0.7)
-# Forecast
-forecast_range = forecast.iloc[-12:]
-ax2.plot(forecast_range['ds'], forecast_range['yhat'], label='Forecasting (Prophet)', color='#E67E22', linestyle='--', marker='s', linewidth=2)
-ax2.fill_between(forecast_range['ds'], forecast_range['yhat_lower'], forecast_range['yhat_upper'], color='#F39C12', alpha=0.15)
-ax2.set_title('GAC Motor GCC Import Units Prediction (2026)', fontsize=12)
-ax2.set_xlabel('Year')
-ax2.set_ylabel('Units')
-ax2.legend()
-ax2.grid(True, linestyle=':', alpha=0.5)
-st.pyplot(fig2)
+# 4. Forecast Visualization (Disabled)
+# st.subheader("🔮 2026 Forecast & Predictive Analysis")
+# fig2, ax2 = plt.subplots(figsize=(10, 5))
+# # Historical
+# ax2.plot(df['ds'], df['y'], label='Historical', color='#1F618D', marker='o', alpha=0.7)
+# # Forecast
+# forecast_range = forecast.iloc[-12:]
+# ax2.plot(forecast_range['ds'], forecast_range['yhat'], label='Forecasting (Prophet)', color='#E67E22', linestyle='--', marker='s', linewidth=2)
+# ax2.fill_between(forecast_range['ds'], forecast_range['yhat_lower'], forecast_range['yhat_upper'], color='#F39C12', alpha=0.15)
+# ax2.set_title('GAC Motor GCC Import Units Prediction (2026)', fontsize=12)
+# ax2.set_xlabel('Year')
+# ax2.set_ylabel('Units')
+# ax2.legend()
+# ax2.grid(True, linestyle=':', alpha=0.5)
+# st.pyplot(fig2)
 
 # 5. Data Table
 with st.expander("View Raw Forecast Data"):
