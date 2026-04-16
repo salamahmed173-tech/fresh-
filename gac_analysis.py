@@ -30,6 +30,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("🚗 GAC Motor GCC Import Analysis & 2026 Forecast")
+st.info("🔄 Dashboard is initializing and running the predictive model. This may take a moment on the first launch...")
 st.markdown("---")
 
 # 1. Data Synthesis based on research data
