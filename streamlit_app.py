@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from prophet import Prophet
+# from prophet import Prophet
 from sklearn.metrics import mean_squared_error
 import datetime
 
