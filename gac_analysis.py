@@ -10,6 +10,9 @@ import datetime
 # Page Configuration
 st.set_page_config(page_title="GAC Motor GCC Analysis", page_icon="🚗", layout="wide")
 
+st.write("# 🚀 IF YOU CAN SEE THIS, THE APP IS WORKING!")
+st.write("---")
+
 # Custom CSS for Premium Look
 st.markdown("""
     <style>
